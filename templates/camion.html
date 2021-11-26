@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/6635658042.js" crossorigin="anonymous"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dosis:wght@700&display=swap" rel="stylesheet">
+
+    <title> Camion </title>
+    <link rel = "icon" href = "{{ url_for('static', filename='assets/iconn.jpg') }}" type = "image/x-icon">
+    <style>
+input {
+  width: 60px;
+}
+input[type=text]:focus {
+  width: 100%;
+}
+
+</style>
+</head>
+
+<body>
+
+    <header class="bg-light">
+        <div class="container">
+            <nav class="navbar navbar-light">
+                <a class="navbar-brand" href="/public/index.html">
+                    <img src="{{ url_for('static', filename='assets/test.png') }}" alt="bootstrap"  height="60"  class="d-inline-block align-text-top">
+                </a>
+                <div class="d-flex align-items-center justify-content-between">
+                    <p class="fw-bold m-0 p-0 mx-5" style = " font-family: 'Dosis', sans-serif;">Camion</p>
+                    <a href ="{{ url_for('show_facture',id=data['id'],edit_id=-1) }}" class="btn btn-info" type="submit" style = " font-family: 'Dosis', sans-serif;">Facture</a>
+                    <p style = " font-family: 'Dosis', sans-serif;;padding-left:5px; padding-right:5px"></p>
+                    <a href ="{{ url_for('show' , adding=False , edit_id =-1) }}" class="btn btn-warning" type="submit" style = " font-family: 'Dosis', sans-serif;">Commandes</a>
+                                        <p style = " font-family: 'Dosis', sans-serif;;padding-left:5px; padding-right:5px"></p>
+                    <a href ="{{ url_for('root') }}" class="btn btn-dark" type="submit" style = " font-family: 'Dosis', sans-serif;">Acceuil</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+<div class="p-3 rounded shadow my-5">
+  <p class="h3 mb-3" style = " font-family: 'Dosis', sans-serif;color:#C0392B;">Camion</p>
+
+<table class="table" class="fixed" id="historyTable">
+                <thead>
+                  <tr>
+
+                    {% for i in Columns : %}
+                        {% if i[1] %}
+                            <th scope="col" style = " font-family: 'Dosis', sans-serif;">{{i[1]}}</th>
+                        {% endif %}
+                    {% endfor %}
+                    <th scope="col" style = " font-family: 'Dosis', sans-serif;"></th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                    {% if adding == True  %}
+
+                    <tr>
+                        <form action="{{ url_for('add_camion',id = data['id'])}}" method="post">
+                            {% for i in Columns : %}
+                                {% if i[0] == 'date_facture'%} <td> <input type="date" id={{i[0]}} name={{i[0]}} style ="width: 120px;"></td>
+                                {% elif i[0] == 'facture_n'%} <td>{{data[i[0]]}}</td>
+                                {% elif i[0] == 'client'%}<td>{{data[i[0]]}}</td>
+                                    {% elif i[0] == 'date_prestation'%} <td> <input type="date" id={{i[0]}} name={{i[0]}} style ="width: 120px;"></td>
+                                    {% elif i[0] == 'id'%}
+                                    {% else %}<td> <input type="text" id={{i[0]}} name={{i[0]}}></td>
+                                {% endif %}
+                            {% endfor %}
+                            <td>
+                                <button class="btn btn-outline-primary" type="submit" style ="width: 60px;font-family: 'Dosis', sans-serif;">Ajouter</button></form>
+
+                            </td>
+                    </tr>
+                            {% elif  edit_id == data['id']  %}
+
+                                <tr>
+                                    <form action="{{ url_for('edit_camion' ,id=data['id'])}}" method="post">
+                                        {% for j in Columns : %}
+                                            {% if j[0] == 'date_facture'%} <td> <input type="date" id={{j[0]}} name={{j[0]}} value ={{data[j[0]]}} style ="width: 120px;"></td>
+                                              {% elif j[0] == 'date_prestation'%} <td> <input type="date" id={{j[0]}} name={{j[0]}} value ={{data[j[0]]}} style ="width: 120px;"></td>
+                                              {% elif j[0] == 'id'%}
+                                              {% elif j[0] == 'facture_n'%} <td>{{data[j[0]]}}</td>
+                                              {% elif j[0] == 'client'%}<td>{{data[j[0]]}}</td>
+                                              {% else %}
+                                              <td> <input type="text" id={{j[0]}} name={{j[0]}} value ={{data[j[0]]}}></td>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <td>
+                                            <button class="btn btn-outline-primary" type="submit" style ="width: 100px;font-family: 'Dosis', sans-serif;">Enregistrer</button>
+                                    </form>
+                                            <a href="{{ url_for('show_camion' ,id = data['id'] , edit_id =-1)}}" class="btn btn-outline-danger" type="submit" style ="width: 80px;font-family: 'Dosis', sans-serif;">Annuler</a>
+                                        </td>
+                                </tr>
+                            {% else %}
+<tr>
+                                {% for j in Columns : %}
+                                    {% if j[1] %}
+                                        <td>{{data[j[0]]}}</td>
+                                    {% endif %}
+                                {% endfor %}
+
+                                <td>
+                                    <a class="btn btn-outline-secondary" href ="{{ url_for('edit_camion',id=data['id']) }}" type="submit" style ="    width: 80px;font-family: 'Dosis', sans-serif;" >Modifier</a>
+                                </td>
+                                </tr>
+                            {% endif %}
+                </tbody>
+            </table>
+        </div>
+</body>
+</html>
